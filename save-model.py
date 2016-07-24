@@ -126,6 +126,10 @@ def main():
     # Run the training
     trainer.run()
 
+    # Save Model
+    serializers.save_npz('model/simple-3layer-perceptron.model', model)
+    serializers.save_npz('model/simple-3layer-perceptron.state', optimizer)
+
     # Predictor
     xx = Variable(np.array([dd[1][0],]), volatile=True)
     y = model.predictor(xx)

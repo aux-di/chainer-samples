@@ -53,11 +53,14 @@ def main():
     print('# epoch: {}'.format(args.epoch))
     print('')
 
+    # Load model
     model = L.Classifier(MLP(n_in, args.unit, 3))
+    serializers.load_npz('model/simple-3layer-perceptron.model', model)
 
-    # Setup an optimizer
+    # Load optimizer
     optimizer = chainer.optimizers.Adam()
     optimizer.setup(model)
+    serializers.load_npz('model/simple-3layer-perceptron.state', optimizer)
 
     # Load dataset from CSV
     csv = pd.read_csv('csv/images-data.csv')
@@ -84,47 +87,6 @@ def main():
         dataset = (x, y)
 
         dd.append(dataset)
-
-    train, test = dd, dd
-
-    train_iter = chainer.iterators.SerialIterator(train, args.batchsize)
-    test_iter = chainer.iterators.SerialIterator(test, args.batchsize,
-                                                 repeat=False, shuffle=False)
-
-    # Set up a trainer
-    updater = training.StandardUpdater(train_iter, optimizer, device=args.gpu)
-    trainer = training.Trainer(updater, (args.epoch, 'epoch'), out=args.out)
-
-    # Evaluate the model with the test dataset for each epoch
-    trainer.extend(extensions.Evaluator(test_iter, model, device=args.gpu))
-
-    # Dump a computational graph from 'loss' variable at the first iteration
-    # The "main" refers to the target link of the "main" optimizer.
-    trainer.extend(extensions.dump_graph('main/loss'))
-
-    # Take a snapshot at each epoch
-    trainer.extend(extensions.snapshot())
-
-    # Write a log of evaluation statistics for each epoch
-    trainer.extend(extensions.LogReport())
-
-    # Print selected entries of the log to stdout
-    # Here "main" refers to the target link of the "main" optimizer again, and
-    # "validation" refers to the default name of the Evaluator extension.
-    # Entries other than 'epoch' are reported by the Classifier link, called by
-    # either the updater or the evaluator.
-    trainer.extend(extensions.PrintReport(
-        ['epoch', 'main/loss', 'validation/main/loss',
-         'main/accuracy', 'validation/main/accuracy']))
-
-    # Print a progress bar to stdout
-    trainer.extend(extensions.ProgressBar())
-
-    # Resume from a snapshot
-    #chainer.serializers.load_npz(resume, trainer)
-
-    # Run the training
-    trainer.run()
 
     # Predictor
     xx = Variable(np.array([dd[1][0],]), volatile=True)
