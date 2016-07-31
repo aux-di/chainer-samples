@@ -10,7 +10,6 @@ import chainer.functions as F
 import chainer.links as L
 from chainer.training import extensions
 import cv2
-#from matplotlib import pylab as plt
 
 # Network definition
 class MLP(chainer.Chain):
@@ -28,6 +27,7 @@ class MLP(chainer.Chain):
         return self.l3(h2)
 
 def main():
+
     parser = argparse.ArgumentParser(description='Chainer example: MNIST')
     parser.add_argument('--batchsize', '-b', type=int, default=1,
                         help='Number of images in each mini batch')
@@ -44,15 +44,27 @@ def main():
     args = parser.parse_args()
 
     # load a color image
-    img = cv2.imread('images/white.jpg', cv2.IMREAD_COLOR)
+    img = cv2.imread('images/blue.jpg', cv2.IMREAD_COLOR)
+    # print img
+    # print img.shape
 
-    # color -> grayscale
-    imggray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    blue = []
+    green = []
+    red = []
 
-    # image -> array
-    imgdata = np.array(imggray, dtype='f')
+    for y in range(len(img)):
+        for x in range(len(img[y])):
+            blue.append(img[y][x][0])
+            green.append(img[y][x][1])
+            red.append(img[y][x][2])
 
-    n_in = 32*32
+    bgr = blue + green + red
+    imgdata = np.array(bgr, dtype='f')
+    imgdata = imgdata.reshape(1, 3, 8, 16)
+    imgdata = imgdata / 255.0
+    print imgdata
+
+    n_in = 3 * 8 * 16
 
     print('GPU: {}'.format(args.gpu))
     print('# unit: {}'.format(args.unit))
@@ -67,8 +79,7 @@ def main():
     optimizer.setup(model)
 
     # Load dataset
-    x = imgdata.reshape(1, -1)[0]
-    x = x / 255.0
+    x = imgdata
     y = np.array(5, dtype=np.int32)
     dd = [(x, y)]
     train, test = dd, dd
@@ -107,7 +118,7 @@ def main():
     trainer.extend(extensions.ProgressBar())
 
     # Resume from a snapshot
-    #chainer.serializers.load_npz(resume, trainer)
+    # chainer.serializers.load_npz(resume, trainer)
 
     # Run the training
     trainer.run()
