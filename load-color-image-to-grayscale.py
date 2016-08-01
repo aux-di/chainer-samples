@@ -60,7 +60,6 @@ def main():
     imgdata = imgdata / 255.0
     print imgdata
 
-
     n_in = 8 * 16
 
     print('GPU: {}'.format(args.gpu))
