@@ -82,9 +82,7 @@ def main():
             for x in range(len(imggray[y])):
                 gray.append(imggray[y][x])
 
-        imgdata = np.array(gray, dtype='f')
-        imgdata = imgdata.reshape(1, 1, 32, 32)
-        imgdata = imgdata / 255.0
+        imgdata = np.array(gray, dtype='f').reshape(1, 1, 32, 32) / 255.0
 
         # set dataset
         x = imgdata
