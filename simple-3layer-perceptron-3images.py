@@ -54,9 +54,35 @@ def main():
     imggray3 = cv2.cvtColor(img3, cv2.COLOR_RGB2GRAY)
 
     # image -> array
-    imgdata1 = np.array(imggray1, dtype='f')
-    imgdata2 = np.array(imggray2, dtype='f')
-    imgdata3 = np.array(imggray3, dtype='f')
+    gray = []
+
+    for y in range(len(imggray1)):
+        for x in range(len(imggray1[y])):
+            gray.append(imggray1[y][x])
+
+    imgdata1 = np.array(gray, dtype='f')
+    imgdata1 = imgdata1.reshape(1, 1, 32, 32)
+    imgdata1 = imgdata1 / 255.0
+
+    gray = []
+
+    for y in range(len(imggray2)):
+        for x in range(len(imggray2[y])):
+            gray.append(imggray2[y][x])
+
+    imgdata2 = np.array(gray, dtype='f')
+    imgdata2 = imgdata2.reshape(1, 1, 32, 32)
+    imgdata2 = imgdata2 / 255.0
+
+    gray = []
+
+    for y in range(len(imggray3)):
+        for x in range(len(imggray3[y])):
+            gray.append(imggray3[y][x])
+
+    imgdata3 = np.array(gray, dtype='f')
+    imgdata3 = imgdata3.reshape(1, 1, 32, 32)
+    imgdata3 = imgdata3 / 255.0
 
     n_in = 32*32
 
@@ -73,12 +99,9 @@ def main():
     optimizer.setup(model)
 
     # Load dataset
-    x1 = imgdata1.reshape(1, -1)[0]
-    x2 = imgdata2.reshape(1, -1)[0]
-    x3 = imgdata3.reshape(1, -1)[0]
-    x1 = x1 / 255.0
-    x2 = x2 / 255.0
-    x3 = x3 / 255.0
+    x1 = imgdata1
+    x2 = imgdata2
+    x3 = imgdata3
     y1 = np.array(0, dtype=np.int32)
     y2 = np.array(1, dtype=np.int32)
     y3 = np.array(2, dtype=np.int32)

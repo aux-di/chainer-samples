@@ -75,11 +75,18 @@ def main():
         imggray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
 
         # image -> array
-        imgdata = np.array(imggray, dtype='f')
+        gray = []
+
+        for y in range(len(imggray)):
+            for x in range(len(imggray[y])):
+                gray.append(imggray[y][x])
+
+        imgdata = np.array(gray, dtype='f')
+        imgdata = imgdata.reshape(1, 1, 32, 32)
+        imgdata = imgdata / 255.0
 
         # set dataset
-        x = imgdata.reshape(1, -1)[0]
-        x = x / 255.0
+        x = imgdata
         y = np.array(label, dtype=np.int32)
         dataset = (x, y)
 
