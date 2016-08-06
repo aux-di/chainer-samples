@@ -25,7 +25,7 @@ class MLP(chainer.Chain):
 
     def __call__(self, x):
 
-        n = 10
+        n = 0
 
         if n == 0:
             h1 = F.relu(self.l1(x))
