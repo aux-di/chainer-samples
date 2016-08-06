@@ -133,7 +133,7 @@ def main():
     trainer.run()
 
     # Predictor
-    xx = Variable(np.array([dd[1][0],]), volatile=True)
+    xx = Variable(np.array([dd[1][0], ]), volatile=True)
     y = model.predictor(xx)
     print y.data
     print np.argmax(y.data)
