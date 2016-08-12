@@ -11,6 +11,7 @@ import chainer.links as L
 from chainer import serializers
 
 import ptb
+import words
 
 def main():
     parser = argparse.ArgumentParser()
@@ -36,7 +37,7 @@ def main():
     xp = cuda.cupy if args.gpu >= 0 else np
 
     # load vocabulary
-    vocab = chainer.datasets.get_ptb_words_vocabulary()
+    vocab = words.get_ptb_words_vocabulary()
 
     ivocab = {}
     for c, i in vocab.items():
@@ -59,6 +60,8 @@ def main():
     primetext = args.primetext
     if isinstance(primetext, six.binary_type):
         primetext = primetext.decode('utf-8')
+
+    primetext = primetext.encode('utf-8')
 
     if primetext in vocab:
         prev_word = chainer.Variable(xp.array([vocab[primetext]], xp.int32))

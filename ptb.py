@@ -11,6 +11,7 @@ import chainer.links as L
 from chainer import training
 from chainer.training import extensions
 
+import words
 
 # Definition of a recurrent net for language modeling
 class RNNForLM(chainer.Chain):
@@ -149,7 +150,7 @@ def main():
     parser.add_argument('--bproplen', '-l', type=int, default=35,
                         help='Number of words in each mini batch '
                              '(= length of truncated BPTT)')
-    parser.add_argument('--epoch', '-e', type=int, default=39,
+    parser.add_argument('--epoch', '-e', type=int, default=1,
                         help='Number of sweeps over the dataset to train')
     parser.add_argument('--gpu', '-g', type=int, default=-1,
                         help='GPU ID (negative value indicates CPU)')
@@ -167,7 +168,7 @@ def main():
     args = parser.parse_args()
 
     # Load the Penn Tree Bank long word sequence dataset
-    train, val, test = chainer.datasets.get_ptb_words()
+    train, val, test = words.get_ptb_words()
     n_vocab = max(train) + 1  # train is just an array of integers
     print('#vocab =', n_vocab)
 
@@ -175,9 +176,6 @@ def main():
         train = train[:100]
         val = val[:100]
         test = test[:100]
-
-    print(train)
-    exit()
 
     train_iter = ParallelSequentialIterator(train, args.batchsize)
     val_iter = ParallelSequentialIterator(val, 1, repeat=False)
