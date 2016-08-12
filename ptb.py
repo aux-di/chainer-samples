@@ -150,7 +150,7 @@ def main():
     parser.add_argument('--bproplen', '-l', type=int, default=35,
                         help='Number of words in each mini batch '
                              '(= length of truncated BPTT)')
-    parser.add_argument('--epoch', '-e', type=int, default=1,
+    parser.add_argument('--epoch', '-e', type=int, default=199,
                         help='Number of sweeps over the dataset to train')
     parser.add_argument('--gpu', '-g', type=int, default=-1,
                         help='GPU ID (negative value indicates CPU)')
