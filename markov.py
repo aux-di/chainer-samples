@@ -17,21 +17,22 @@ if __name__ == '__main__':
     markov = {}
     w1 = ''
     w2 = ''
+    w3 = ''
     for word in wordlist:
-        if w1 and w2:
-            if (w1, w2) not in markov:
-                markov[(w1, w2)] = []
-            markov[(w1, w2)].append(word)
-        w1, w2 = w2, word
+        if w1 and w2 and w3:
+            if (w1, w2, w3) not in markov:
+                markov[(w1, w2, w3)] = []
+            markov[(w1, w2, w3)].append(word)
+        w1, w2, w3 = w2, w3, word
 
     # Generate Sentence
     count = 0
     sentence = ''
-    w1, w2 = random.choice(markov.keys())
+    w1, w2, w3 = random.choice(markov.keys())
     while count < len(wordlist):
-        tmp = random.choice(markov[(w1, w2)])
+        tmp = random.choice(markov[(w1, w2, w3)])
         sentence += tmp
-        w1, w2 = w2, tmp
+        w1, w2, w3 = w2, w3, tmp
         count += 1
 
     print sentence
